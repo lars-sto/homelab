@@ -1,0 +1,63 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+
+# IntelliJ / JetBrains
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+
+# Kubernetes / kind
+kubeconfig
+*.kubeconfig
+
+# kind temporary files
+kind-cluster.yaml
+kind-config.local.yaml
+
+# Logs
+*.log
+logs/
+tmp/
+*.tmp
+
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.*
+**/*.tfvars
+**/*.auto.tfvars
+
+# Crash logs
+crash.log
+
+# Secrets / Sensitive Files
+secrets.yaml
+secrets.yml
+*.secret.yaml
+*.secret.yml
+*.key
+*.pem
+*.crt
+.env
+.env.*
+*.age
+sops.*.yaml
+
+# Backup Artifacts
+backups/
+*.backup
+*.bak
+
+# Container / Build
+dist/
+build/
+bin/
+node_modules/
+
+# Metrics / Local Tools
+coverage.out
