@@ -1,14 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-infra
+  name: platform-argocd-infra
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   project: default
   source:
     repoURL: https://github.com/lars-sto/homelab.git
     targetRevision: main
-    path: gitops/manifests/argocd
+    path: gitops/manifests/platform/argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -16,5 +18,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
