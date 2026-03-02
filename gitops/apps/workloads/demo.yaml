@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps-demo
+  name: demo
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "30"
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/lars-sto/homelab.git
     targetRevision: main
-    path: gitops/manifests/apps/demo
+    path: gitops/manifests/workloads/demo
   destination:
     server: https://kubernetes.default.svc
     namespace: apps
