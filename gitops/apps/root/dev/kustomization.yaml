@@ -4,5 +4,5 @@ resources:
   - ../../platform/namespaces.yaml
   - ../../platform/ingress-nginx.yaml
   - ../../platform/argocd-infra.yaml
-  - ../../platform/observability
+  - ../../platform/observability/kube-prometheus-stack.yaml
   - ../../workloads/demo.yaml
