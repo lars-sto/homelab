@@ -4,7 +4,7 @@ metadata:
   name: platform-observability-kube-prometheus-stack
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   project: default
 
