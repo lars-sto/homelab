@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-ingress-nginx
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - appName: platform-ingress-nginx
+            syncWave: "10"
+  template:
+    metadata:
+      name: "{{appName}}"
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{syncWave}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://kubernetes.github.io/ingress-nginx
+        chart: ingress-nginx
+        targetRevision: 4.11.0
+        helm:
+          releaseName: ingress-nginx
+          values: |
+            controller:
+              admissionWebhooks:
+                enabled: true
+              service:
+                type: NodePort
+                nodePorts:
+                  http: 30080
+                  https: 30443
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: ingress-nginx
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-kube-prometheus-stack
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - appName: platform-observability-kube-prometheus-stack
+            syncWave: "30"
+  template:
+    metadata:
+      name: "{{appName}}"
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{syncWave}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://prometheus-community.github.io/helm-charts
+        chart: kube-prometheus-stack
+        targetRevision: 82.8.0
+        helm:
+          releaseName: kube-prometheus-stack
+          values: |
+            grafana:
+              enabled: true
+              ingress:
+                enabled: true
+                ingressClassName: nginx
+                hosts:
+                  - grafana.local
+                path: /
+                pathType: Prefix
+
+            prometheus:
+              prometheusSpec:
+                retention: 7d
+
+            alertmanager:
+              enabled: true
+              alertmanagerSpec:
+                replicas: 1
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: observability
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
