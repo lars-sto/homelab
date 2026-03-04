@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CLUSTER_NAME="homelab-dev"
-KIND_CONFIG="clusters/dev/kind-config.yaml"
+KIND_CONFIG="../clusters/dev/kind-config.yaml"
 
 echo "Deleting old cluster (if exists)..."
 kind delete cluster --name "${CLUSTER_NAME}" || true
@@ -14,8 +14,8 @@ echo "Creating argocd namespace..."
 kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Installing minimal ArgoCD core..."
-kubectl apply -n argocd \
-  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml
+kubectl apply -n argocd --server-side --force-conflicts \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 echo "Waiting for ArgoCD server deployment..."
 kubectl rollout status deployment argocd-server -n argocd --timeout=180s
@@ -33,6 +33,7 @@ else
 fi
 
 echo "Applying root application..."
-kubectl apply -n argocd -f clusters/dev/root-app.yaml
+kubectl apply -n argocd -f ../gitops/applicationsets/dev/git-apps.yaml
+kubectl apply -n argocd -f ../gitops/applicationsets/dev/helm-apps.yaml
 
 echo "Bootstrap complete."

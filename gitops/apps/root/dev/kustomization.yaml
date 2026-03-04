@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ../../platform/namespaces.yaml
-  - ../../platform/ingress-nginx.yaml
-  - ../../platform/argocd-infra.yaml
-  - ../../platform/observability/kube-prometheus-stack.yaml
-  - ../../workloads/demo.yaml

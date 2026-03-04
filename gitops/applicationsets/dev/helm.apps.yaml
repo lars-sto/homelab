@@ -1,0 +1,82 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-helm-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+
+  generators:
+    - list:
+        elements:
+          - appName: platform-ingress-nginx
+            syncWave: "10"
+            repoURL: https://kubernetes.github.io/ingress-nginx
+            chart: ingress-nginx
+            targetRevision: 4.11.0
+            destNamespace: ingress-nginx
+            releaseName: ingress-nginx
+            values: |
+              controller:
+                admissionWebhooks:
+                  enabled: true
+                service:
+                  type: NodePort
+                  nodePorts:
+                    http: 30080
+                    https: 30443
+
+          - appName: platform-observability-kube-prometheus-stack
+            syncWave: "30"
+            repoURL: https://prometheus-community.github.io/helm-charts
+            chart: kube-prometheus-stack
+            targetRevision: 82.8.0
+            destNamespace: observability
+            releaseName: kube-prometheus-stack
+            values: |
+              grafana:
+                enabled: true
+                ingress:
+                  enabled: true
+                  ingressClassName: nginx
+                  hosts:
+                    - grafana.local
+                  path: /
+                  pathType: Prefix
+
+              prometheus:
+                prometheusSpec:
+                  retention: 7d
+
+              alertmanager:
+                enabled: true
+                alertmanagerSpec:
+                  replicas: 1
+
+  template:
+    metadata:
+      name: '{{ .appName }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          releaseName: '{{ .releaseName }}'
+          values: |
+            {{ .values | nindent 12 }}
+destination:
+  server: https://kubernetes.default.svc
+  namespace: '{{ .destNamespace }}'
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true

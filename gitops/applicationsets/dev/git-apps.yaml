@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-git-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+
+  generators:
+    - list:
+        elements:
+          - appName: namespaces
+            syncWave: "0"
+            repoURL: https://github.com/lars-sto/homelab.git
+            targetRevision: main
+            path: gitops/manifests/namespaces
+            destNamespace: default
+
+          - appName: platform-argocd-infra
+            syncWave: "20"
+            repoURL: https://github.com/lars-sto/homelab.git
+            targetRevision: main
+            path: gitops/manifests/platform/argocd
+            destNamespace: argocd
+
+          - appName: apps-demo
+            syncWave: "40"
+            repoURL: https://github.com/lars-sto/homelab.git
+            targetRevision: main
+            path: gitops/manifests/workloads/demo
+            destNamespace: apps
+
+  template:
+    metadata:
+      name: '{{ .appName }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .repoURL }}'
+        targetRevision: '{{ .targetRevision }}'
+        path: '{{ .path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .destNamespace }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
