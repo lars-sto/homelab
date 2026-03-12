@@ -9,4 +9,4 @@ resources:
 images:
   - name: ghcr.io/lars-sto/calculator-service
     newName: ghcr.io/lars-sto/calculator-service
-    newTag: 0fc1628ca2bf8c67e537555a9748a86d4d17e211
+    newTag: f59dec941ed35eb870597c2aa4500279ec35b8c6
