@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-service
+  namespace: apps
+  labels:
+    app: calculator-service
+spec:
+  type: ClusterIP
+  selector:
+    app: calculator-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

@@ -32,6 +32,13 @@ spec:
             path: gitops/manifests/workloads/demo
             destNamespace: apps
 
+          - appName: service-calculator
+            syncWave: "30"
+            repoURL: https://github.com/lars-sto/homelab.git
+            targetRevision: main
+            path: gitops/manifests/services/calculator
+            destNamespace: apps
+
   template:
     metadata:
       name: '{{ .appName }}'

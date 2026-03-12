@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+images:
+  - name: ghcr.io/lars-sto/calculator-service
+    newName: ghcr.io/lars-sto/calculator-service
+    newTag: 0fc1628ca2bf8c67e537555a9748a86d4d17e211
