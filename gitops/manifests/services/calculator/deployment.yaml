@@ -15,6 +15,11 @@ spec:
       labels:
         app: calculator-service
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
       containers:
         - name: calculator-service
           image: ghcr.io/lars-sto/calculator-service
@@ -51,7 +56,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
