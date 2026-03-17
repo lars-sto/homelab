@@ -1,50 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: dev-ingress-nginx
-  namespace: argocd
-spec:
-  generators:
-    - list:
-        elements:
-          - appName: platform-ingress-nginx
-            syncWave: "10"
-  template:
-    metadata:
-      name: "{{appName}}"
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/sync-wave: "{{syncWave}}"
-    spec:
-      project: default
-      source:
-        repoURL: https://kubernetes.github.io/ingress-nginx
-        chart: ingress-nginx
-        targetRevision: 4.11.0
-        helm:
-          releaseName: ingress-nginx
-          values: |
-            controller:
-              admissionWebhooks:
-                enabled: true
-              service:
-                type: NodePort
-                nodePorts:
-                  http: 30080
-                  https: 30443
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: ingress-nginx
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
   name: dev-kube-prometheus-stack
   namespace: argocd
 spec:
@@ -96,3 +52,74 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-blackbox-exporter
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - appName: platform-observability-blackbox-exporter
+            syncWave: "40"
+  template:
+    metadata:
+      name: '{{ .appName }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://prometheus-community.github.io/helm-charts
+        chart: prometheus-blackbox-exporter
+        targetRevision: 11.8.0
+        helm:
+          releaseName: blackbox-exporter
+          values: |
+            serviceMonitor:
+              selfMonitor:
+                enabled: true
+              enabled: true
+              defaults:
+                interval: 30s
+                scrapeTimeout: 10s
+                module: http_2xx
+              targets:
+                - name: argocd-dev
+                  url: http://argocd.dev.home.arpa
+                  labels:
+                    env: dev
+                    category: platform
+
+                - name: grafana-dev
+                  url: http://grafana.dev.home.arpa
+                  labels:
+                    env: dev
+                    category: observability
+
+                - name: calculator-dev
+                  url: http://calculator.dev.home.arpa
+                  labels:
+                    env: dev
+                    category: service
+
+                - name: demo-dev
+                  url: http://demo.dev.home.arpa
+                  labels:
+                    env: dev
+                    category: workload
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: observability
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

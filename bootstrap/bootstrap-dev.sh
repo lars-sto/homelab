@@ -33,7 +33,7 @@ else
 fi
 
 echo "Applying root application..."
-kubectl apply -n argocd -f ../gitops/applicationsets/dev/git-apps.yaml
-kubectl apply -n argocd -f ../gitops/applicationsets/dev/helm-apps.yaml
+kubectl apply -n argocd -f ../gitops/applicationsets/dev/core-apps.yaml
+kubectl apply -n argocd -f ../gitops/applicationsets/dev/observability-apps.yaml
 
 echo "Bootstrap complete."
