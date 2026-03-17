@@ -74,7 +74,7 @@ spec:
                 enabled: true
                 ingressClassName: nginx
                 hosts:
-                  - grafana.local
+                  - grafana.dev.home.arpa
                 path: /
                 pathType: Prefix
 
