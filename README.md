@@ -47,3 +47,39 @@ gitops/
     platform/           # platform components
     services/           # reusable services
     workloads/          # application workloads
+```
+
+## Architecture Approach
+
+The repository is intentionally structured like a small platform monorepo:
+- `clusters/` contains cluster-specific entrypoints
+- `gitops/applicationsets/` contains Argo CD application definitions
+- `gitops/manifests/` contains the actual Kubernetes manifests
+- platform concerns are separated from services and workloads
+
+This keeps cluster bootstrapping, platform rollout, and workload deployment conceptually separated
+
+### Development Cluster
+The local development environment currently uses kind.
+
+#### Prerequisites
+- Docker
+- kind
+- kubectl
+
+#### Bootstrap
+```bash
+cd bootstrap
+./bootstrap-dev.sh
+```
+
+This bootstraps:
+- a local kind cluster
+- Argo CD
+- ingress-nginx
+- kube-prometheus-stack
+- example services and workloads
+
+### Local Access
+
+The development setup uses hostnames under `dev.home.arpa`
