@@ -92,25 +92,25 @@ spec:
                 module: http_2xx
               targets:
                 - name: argocd-dev
-                  url: http://argocd.dev.home.arpa
+                  url: http://argocd-server.argocd.svc.cluster.local
                   labels:
                     env: dev
                     category: platform
 
                 - name: grafana-dev
-                  url: http://grafana.dev.home.arpa
+                  url: http://kube-prometheus-stack-grafana.observability.svc.cluster.local
                   labels:
                     env: dev
                     category: observability
 
                 - name: calculator-dev
-                  url: http://calculator.dev.home.arpa
+                  url: http://calculator-service.apps.svc.cluster.local
                   labels:
                     env: dev
                     category: service
 
                 - name: demo-dev
-                  url: http://demo.dev.home.arpa
+                  url: http://demo.apps.svc.cluster.local
                   labels:
                     env: dev
                     category: workload
