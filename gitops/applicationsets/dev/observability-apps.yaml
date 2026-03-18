@@ -106,7 +106,7 @@ spec:
                     category: observability
 
                 - name: calculator-dev
-                  url: http://calculator-service.apps.svc.cluster.local
+                  url: http://calculator-service.apps.svc.cluster.local/healthz
                   labels:
                     release: kube-prometheus-stack
                     env: dev
