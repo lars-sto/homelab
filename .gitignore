@@ -13,6 +13,7 @@ out/
 # Kubernetes / kind
 kubeconfig
 *.kubeconfig
+clusters/dev/kind-config.yaml
 
 # kind temporary files
 kind-cluster.yaml
