@@ -72,7 +72,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: local-path
+        storageClassName: standard
         resources:
           requests:
             storage: 5Gi
