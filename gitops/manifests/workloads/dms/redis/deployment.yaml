@@ -18,12 +18,8 @@ spec:
       containers:
         - name: redis
           image: redis:7.2-alpine
-          args:
-            - redis-server
-            - --save
-            - ""
-            - --appendonly
-            - "no"
+          command: ["redis-server"]
+          args: ["--appendonly", "no"]
           ports:
             - name: redis
               containerPort: 6379
@@ -48,8 +44,3 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL

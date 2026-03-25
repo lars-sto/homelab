@@ -8,13 +8,6 @@ spec:
   goTemplateOptions:
     - missingkey=error
 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-
   generators:
     - list:
         elements:
@@ -86,6 +79,8 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
