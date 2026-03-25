@@ -53,12 +53,12 @@ spec:
             path: gitops/manifests/workloads/dms/postgres
             destNamespace: dms
 
-          - appName: dms-redis
-            syncWave: "55"
-            repoURL: https://github.com/lars-sto/homelab.git
-            targetRevision: main
-            path: gitops/manifests/workloads/dms/redis
-            destNamespace: dms
+#          - appName: dms-redis
+#            syncWave: "55"
+#            repoURL: https://github.com/lars-sto/homelab.git
+#            targetRevision: main
+#            path: gitops/manifests/workloads/dms/redis
+#            destNamespace: dms
 
   template:
     metadata:
