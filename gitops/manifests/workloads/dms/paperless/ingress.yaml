@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: paperless
+                name: paperless-svc
                 port:
                   number: 80
