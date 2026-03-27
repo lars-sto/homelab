@@ -132,3 +132,40 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-sealed-secrets
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - appName: platform-sealed-secrets
+            syncWave: "12"
+  template:
+    metadata:
+      name: "{{appName}}"
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{syncWave}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://bitnami-labs.github.io/sealed-secrets
+        chart: sealed-secrets
+        targetRevision: 2.17.3
+        helm:
+          releaseName: sealed-secrets
+          values: |
+            fullnameOverride: sealed-secrets-controller
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
