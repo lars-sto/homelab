@@ -60,6 +60,13 @@ spec:
             path: gitops/manifests/workloads/dms/redis
             destNamespace: dms
 
+          - appName: dms-paperless
+            syncWave: "60"
+            repoURL: https://github.com/lars-sto/homelab.git
+            targetRevision: main
+            path: gitops/manifests/workloads/dms/paperless
+            destNamespace: dms
+
   template:
     metadata:
       name: '{{ .appName }}'
