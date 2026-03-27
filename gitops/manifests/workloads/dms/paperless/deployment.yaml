@@ -15,7 +15,6 @@ spec:
       labels:
         app: paperless
     spec:
-      enableServiceLinks: false
       containers:
         - name: paperless
           image: ghcr.io/paperless-ngx/paperless-ngx:latest
