@@ -7,7 +7,7 @@ spec:
   generators:
     - list:
         elements:
-          - appName: platform-observability-metrics-kube-prometheus-stack
+          - appName: platform-observability-kube-prometheus-stack
             syncWave: "30"
   template:
     metadata:
