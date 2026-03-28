@@ -1,0 +1,36 @@
+serviceMonitor:
+  selfMonitor:
+    enabled: true
+  enabled: true
+  defaults:
+    interval: 30s
+    scrapeTimeout: 10s
+    module: http_2xx
+  targets:
+    - name: argocd-dev
+      url: http://argocd-server.argocd.svc.cluster.local
+      labels:
+        release: kube-prometheus-stack
+        env: dev
+        category: platform
+
+    - name: grafana-dev
+      url: http://kube-prometheus-stack-grafana.observability.svc.cluster.local
+      labels:
+        release: kube-prometheus-stack
+        env: dev
+        category: observability
+
+    - name: calculator-dev
+      url: http://calculator-service.apps.svc.cluster.local/healthz
+      labels:
+        release: kube-prometheus-stack
+        env: dev
+        category: service
+
+    - name: demo-dev
+      url: http://demo.apps.svc.cluster.local
+      labels:
+        release: kube-prometheus-stack
+        env: dev
+        category: workload

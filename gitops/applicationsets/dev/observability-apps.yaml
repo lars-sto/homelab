@@ -63,49 +63,19 @@ spec:
         argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
     spec:
       project: default
-      source:
-        repoURL: https://prometheus-community.github.io/helm-charts
-        chart: prometheus-blackbox-exporter
-        targetRevision: 11.8.0
-        helm:
-          releaseName: blackbox-exporter
-          values: |
-            serviceMonitor:
-              selfMonitor:
-                enabled: true
-              enabled: true
-              defaults:
-                interval: 30s
-                scrapeTimeout: 10s
-                module: http_2xx
-              targets:
-                - name: argocd-dev
-                  url: http://argocd-server.argocd.svc.cluster.local
-                  labels:
-                    release: kube-prometheus-stack
-                    env: dev
-                    category: platform
+      sources:
+        - repoURL: https://prometheus-community.github.io/helm-charts
+          chart: prometheus-blackbox-exporter
+          targetRevision: 11.8.0
+          helm:
+            releaseName: blackbox-exporter
+            valueFiles:
+              - $values/gitops/manifests/platform/observability/metrics/blackbox-exporter/values.yaml
 
-                - name: grafana-dev
-                  url: http://kube-prometheus-stack-grafana.observability.svc.cluster.local
-                  labels:
-                    release: kube-prometheus-stack
-                    env: dev
-                    category: observability
+        - repoURL: https://github.com/lars-sto/homelab.git
+          targetRevision: main
+          ref: values
 
-                - name: calculator-dev
-                  url: http://calculator-service.apps.svc.cluster.local/healthz
-                  labels:
-                    release: kube-prometheus-stack
-                    env: dev
-                    category: service
-
-                - name: demo-dev
-                  url: http://demo.apps.svc.cluster.local
-                  labels:
-                    release: kube-prometheus-stack
-                    env: dev
-                    category: workload
       destination:
         server: https://kubernetes.default.svc
         namespace: observability
