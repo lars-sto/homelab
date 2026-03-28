@@ -85,3 +85,48 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-loki
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - appName: platform-observability-logs-loki
+            syncWave: "45"
+  template:
+    metadata:
+      name: '{{ .appName }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://grafana.github.io/helm-charts
+          chart: loki
+          targetRevision: 6.55.0
+          helm:
+            releaseName: loki
+            valueFiles:
+              - $values/gitops/manifests/platform/observability/logs/loki/values.yaml
+
+        - repoURL: https://github.com/lars-sto/homelab.git
+          targetRevision: main
+          ref: values
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: observability
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
