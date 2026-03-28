@@ -1,0 +1,18 @@
+grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.dev.home.arpa
+    path: /
+    pathType: Prefix
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    replicas: 1

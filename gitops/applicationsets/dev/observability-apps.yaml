@@ -7,7 +7,7 @@ spec:
   generators:
     - list:
         elements:
-          - appName: platform-observability-kube-prometheus-stack
+          - appName: platform-observability-metrics-kube-prometheus-stack
             syncWave: "30"
   template:
     metadata:
@@ -17,31 +17,19 @@ spec:
         argocd.argoproj.io/sync-wave: "{{syncWave}}"
     spec:
       project: default
-      source:
-        repoURL: https://prometheus-community.github.io/helm-charts
-        chart: kube-prometheus-stack
-        targetRevision: 82.8.0
-        helm:
-          releaseName: kube-prometheus-stack
-          values: |
-            grafana:
-              enabled: true
-              ingress:
-                enabled: true
-                ingressClassName: nginx
-                hosts:
-                  - grafana.dev.home.arpa
-                path: /
-                pathType: Prefix
+      sources:
+        - repoURL: https://prometheus-community.github.io/helm-charts
+          chart: kube-prometheus-stack
+          targetRevision: 82.8.0
+          helm:
+            releaseName: kube-prometheus-stack
+            valueFiles:
+              - $values/gitops/manifests/platform/observability/metrics/kube-prometheus-stack/values.yaml
 
-            prometheus:
-              prometheusSpec:
-                retention: 7d
+        - repoURL: https://github.com/lars-sto/homelab.git
+          targetRevision: main
+          ref: values
 
-            alertmanager:
-              enabled: true
-              alertmanagerSpec:
-                replicas: 1
       destination:
         server: https://kubernetes.default.svc
         namespace: observability
