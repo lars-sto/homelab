@@ -45,17 +45,25 @@ gitops/
   manifests/
     namespaces/         # shared namespaces
     platform/           # platform components
-    services/           # reusable services
-    workloads/          # application workloads
+      argocd/
+      storage/
+      observability/
+        metrics/
+        logs/
+        traces/
+        collectors/
+    workloads/          # application and demo workloads
 ```
 
 ## Architecture Approach
 
 The repository is intentionally structured like a small platform monorepo:
 - `clusters/` contains cluster-specific entrypoints
+- `bootstrap/` contains the local bootstrap workflow for the dev cluster
 - `gitops/applicationsets/` contains Argo CD application definitions
 - `gitops/manifests/` contains the actual Kubernetes manifests
-- platform concerns are separated from services and workloads
+- platform concerns are separated from workloads
+- observability is organized by signal type and component domain
 
 This keeps cluster bootstrapping, platform rollout, and workload deployment conceptually separated
 
@@ -77,9 +85,18 @@ This bootstraps:
 - a local kind cluster
 - Argo CD
 - ingress-nginx
+- local-path storage
 - kube-prometheus-stack
-- example services and workloads
+- Prometheus Blackbox Exporter
+- Loki
+- example workloads and stateful applications
 
 ### Local Access
 
-The development setup uses hostnames under `dev.home.arpa`
+The development setup uses hostnames under `dev.home.arpa`. For example:
+- argocd.dev.home.arpa
+- grafana.dev.home.arpa
+- loki.dev.home.arpa
+- calculator.dev.home.arpa
+- demo.dev.home.arpa
+- dms.dev.home.arpa
