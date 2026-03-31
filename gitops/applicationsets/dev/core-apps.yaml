@@ -43,7 +43,7 @@ spec:
             syncWave: "50"
             repoURL: https://github.com/lars-sto/homelab.git
             targetRevision: main
-            path: gitops/manifests/services/calculator
+            path: gitops/manifests/workloads/calculator
             destNamespace: apps
 
           - appName: dms-postgres
