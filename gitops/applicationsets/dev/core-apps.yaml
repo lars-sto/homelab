@@ -22,7 +22,7 @@ spec:
             syncWave: "15"
             repoURL: https://github.com/lars-sto/homelab.git
             targetRevision: main
-            path: gitops/manifests/platform/storage/dev/local-path
+            path: gitops/manifests/platform/storage/local-path/dev
             destNamespace: local-path-storage
 
           - appName: platform-argocd-infra
