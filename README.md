@@ -19,17 +19,26 @@ The platform is built step by step with a focus on:
 
 The current platform work focuses on the Kubernetes base platform:
 
+
+- kind dev cluster
 - Argo CD for GitOps-style deployment
-- ingress-nginx for HTTP ingress routing
+- ingress-nginx via Helm
+- local-path provisioner with standard StorageClass
 - kube-prometheus-stack for observability
+- Prometheus blackbox exporter
+- Loki single-binary with persistence
+- Sealed Secrets
 - example services and workloads for end-to-end deployment validation
+- paperless-ngx + redis + postgres
 
 Planned next steps include:
 
-- Prometheus Blackbox Exporter for reachability and latency checks
+- Cluster wide log collection via alloy
+- Tempo and some traces
 - Pi-hole as a cluster-integrated DNS service for the homelab network
-- Paperless-ngx as a first real stateful workload
+- Paperless-ngx automatic backups (first to disk then to cloud) 
 - later edge integration via Raspberry Pi and ESP32-based sensors
+- ?
 
 ## Repository Structure
 
