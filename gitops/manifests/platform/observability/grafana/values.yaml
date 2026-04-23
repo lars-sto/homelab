@@ -1,6 +1,8 @@
 grafana:
   enabled: true
 
+  envFromSecret: grafana-postgres-datasource
+
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -8,7 +10,6 @@ grafana:
       - grafana.dev.home.arpa
     path: /
     pathType: Prefix
-    envFromSecret: grafana-postgres-datasource
 
   additionalDataSources:
     - name: Loki
