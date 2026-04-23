@@ -1,0 +1,36 @@
+grafana:
+  enabled: true
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.dev.home.arpa
+    path: /
+    pathType: Prefix
+
+  additionalDataSources:
+    - name: Loki
+      uid: loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway.observability.svc.cluster.local
+      isDefault: false
+      editable: false
+      jsonData:
+        maxLines: 1000
+
+    - name: PostgreSQL
+      uid: postgres
+      type: postgres
+      access: proxy
+      url: postgres.dms.svc.cluster.local:5432
+      user: <POSTGRES_USER>
+      editable: false
+      secureJsonData:
+        password: <POSTGRES_PASSWORD>
+      jsonData:
+        database: <POSTGRES_DB>
+        sslmode: disable
+        postgresVersion: 1500
+        timescaledb: false

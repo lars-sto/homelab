@@ -25,7 +25,7 @@ spec:
             releaseName: kube-prometheus-stack
             valueFiles:
               - $values/gitops/manifests/platform/observability/metrics/kube-prometheus-stack/values.yaml
-
+              - $values/gitops/manifests/platform/observability/grafana/values.yaml
         - repoURL: https://github.com/lars-sto/homelab.git
           targetRevision: main
           ref: values
