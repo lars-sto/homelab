@@ -8,6 +8,7 @@ grafana:
       - grafana.dev.home.arpa
     path: /
     pathType: Prefix
+    envFromSecret: grafana-postgres-datasource
 
   additionalDataSources:
     - name: Loki
@@ -25,12 +26,12 @@ grafana:
       type: postgres
       access: proxy
       url: postgres.dms.svc.cluster.local:5432
-      user: ${POSTGRES_USER}
+      user: $__env{POSTGRES_USER}
       editable: false
       secureJsonData:
-        password: ${POSTGRES_PASSWORD}
+        password: $__env{POSTGRES_PASSWORD}
       jsonData:
-        database: ${POSTGRES_DB}
+        database: $__env{POSTGRES_DB}
         sslmode: disable
-        postgresVersion: 1500
+        postgresVersion: 1600
         timescaledb: false
