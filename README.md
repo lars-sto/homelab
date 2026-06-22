@@ -85,9 +85,21 @@ The local development environment currently uses kind.
 - kubectl
 
 #### Bootstrap
+
+The bootstrap script renders a temporary kind config from `clusters/dev/kind-config.example.yaml`.
+By default it stores local-path provisioner data under `.local/dev-storage` in this repository.
+You can override that location with `DEV_STORAGE_PATH=/absolute/path/to/storage`.
+
 ```bash
 cd bootstrap
 ./bootstrap-dev.sh
+```
+
+Example with a custom storage path:
+
+```bash
+cd bootstrap
+DEV_STORAGE_PATH=/srv/homelab-dev-storage ./bootstrap-dev.sh
 ```
 
 This bootstraps:
@@ -109,3 +121,9 @@ The development setup uses hostnames under `dev.home.arpa`. For example:
 - calculator.dev.home.arpa
 - demo.dev.home.arpa
 - dms.dev.home.arpa
+
+For local name resolution, add them to `/etc/hosts` and point them to `127.0.0.1` because the kind control-plane maps ports `80` and `443` to your host:
+
+```text
+127.0.0.1 argocd.dev.home.arpa grafana.dev.home.arpa loki.dev.home.arpa calculator.dev.home.arpa demo.dev.home.arpa dms.dev.home.arpa
+```

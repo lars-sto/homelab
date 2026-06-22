@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CLUSTER_NAME="homelab-dev"
-KIND_CONFIG="../clusters/dev/kind-config.yaml"
+KIND_CONFIG_TEMPLATE="${REPO_ROOT}/clusters/dev/kind-config.example.yaml"
+DEV_STORAGE_PATH="${DEV_STORAGE_PATH:-${REPO_ROOT}/.local/dev-storage}"
+KIND_CONFIG="$(mktemp)"
+
+cleanup() {
+  rm -f "${KIND_CONFIG}"
+}
+
+trap cleanup EXIT
+
+mkdir -p "${DEV_STORAGE_PATH}"
+
+echo "Rendering kind config from template..."
+sed "s|/path/to/your/dev-storage|${DEV_STORAGE_PATH}|g" \
+  "${KIND_CONFIG_TEMPLATE}" > "${KIND_CONFIG}"
 
 echo "Deleting old cluster (if exists)..."
 kind delete cluster --name "${CLUSTER_NAME}" || true
@@ -33,6 +49,6 @@ else
 fi
 
 echo "Applying root application..."
-kubectl apply -n argocd -f ../clusters/dev/root-app.yaml
+kubectl apply -n argocd -f "${REPO_ROOT}/clusters/dev/root-app.yaml"
 
 echo "Bootstrap complete."
